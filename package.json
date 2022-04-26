@@ -1,0 +1,16 @@
+{
+  "name": "svelte-storestore",
+  "version": "1.0.0",
+  "description": "Persist svelte stores to disk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syfrtech/svelte-storestore.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/syfrtech/svelte-storestore"
+}
