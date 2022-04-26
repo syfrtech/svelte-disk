@@ -1,1 +1,1 @@
-# svelte-persiststore
+# svelte-storestore
