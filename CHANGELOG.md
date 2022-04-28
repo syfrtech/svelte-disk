@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.2](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.1...1.0.0-alpha.2) (2022-04-28)
+
+
+### Fixes
+
+* update package main ([cea9246](https://github.com/syfrtech/svelte-storestore/commit/cea924601b649d46837a8ccf6893d9f345914999))
+
 ## 1.0.0-alpha.1 (2022-04-28)
 
 

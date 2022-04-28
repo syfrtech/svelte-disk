@@ -1,6 +1,6 @@
 {
   "name": "svelte-storestore",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Persist svelte stores to disk",
   "main": "lib/index.js",
   "scripts": {
