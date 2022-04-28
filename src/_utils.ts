@@ -3,6 +3,7 @@ import {
   type Writable,
   type Unsubscriber,
   writable,
+  get,
 } from "svelte/store";
 // import {
 //   observableToNotifier,
@@ -115,44 +116,56 @@ async function restore<T>(storage: StorageInterface<T>) {
 // }
 
 /**  A Svelte store which can be persisted to storage. */
-export interface PersistentReadable<T> extends Readable<T> {
+export interface PersistentStore<T> extends Readable<T> {
   /** destroys the persisted value */
-  delete: StorageInterface<T>["del"];
+  destore: StorageInterface<T>["del"];
 
   /** future changes to the Svelte store are persisted to storage */
   startPersisting: () => void;
 
   /** discontinues persisting changes */
   stopPersisting: Unsubscriber;
+
+  /** save the current Svelte store value to storage (once) */
+  gostore: () => void;
 }
 
 /**  Changes to the Svelte store are persisted to storage. */
 export function persistentReadable<T>(
   store: Readable<T>,
   storage: StorageInterface<T>
-): PersistentReadable<T> {
-  let stopPersisting: PersistentReadable<T>["stopPersisting"];
+): PersistentStore<T> {
+  let stopPersisting: PersistentStore<T>["stopPersisting"];
 
-  let startPersisting: PersistentReadable<T>["startPersisting"] = () => {
+  let startPersisting: PersistentStore<T>["startPersisting"] = () => {
     !!stopPersisting && stopPersisting(); // avoid duplicate subscriptions
     stopPersisting = store.subscribe((value) => {
       persist({ storage, value });
     });
   };
   startPersisting();
-  return { ...store, delete: storage.del, startPersisting, stopPersisting };
+
+  let gostore = () => {
+    persist({ storage, value: get(store) });
+  };
+  return {
+    ...store,
+    destore: storage.del,
+    gostore,
+    startPersisting,
+    stopPersisting,
+  };
 }
 
 /**
- * Same as `PersistentReadable`, but with the added option to
+ * Same as `PersistentStore`, but with the added option to
  * restore the persisted value.
  */
-export interface PersistentWritable<T>
-  extends PersistentReadable<T>,
-    Writable<T> {
+export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
   /**
-   * Sets the store to the persisted value.
-   * If persisted data is expired or non-existent, the store will not be set.
+   * Sets the store to the persisted value (async).
+   * If persisted data is expired or non-existent, the store will not be set
+   * and existing/initial store value remains.
    */
   restore: () => void;
 }
