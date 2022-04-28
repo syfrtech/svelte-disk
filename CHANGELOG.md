@@ -1,5 +1,18 @@
 
 
+## [1.0.0-alpha.5](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.4...1.0.0-alpha.5) (2022-04-28)
+
+
+### Features
+
+* better options typing ([3d42072](https://github.com/syfrtech/svelte-storestore/commit/3d42072ace2a05e67ad4c07804ae42cd28adfc29))
+* rename and improve docs ([275a614](https://github.com/syfrtech/svelte-storestore/commit/275a6149b250cb8627dadfbfe65c6b60881875c8))
+
+
+### Fixes
+
+* drop try file ([f24f284](https://github.com/syfrtech/svelte-storestore/commit/f24f28410dcbe8dc341746363e16e885d98a17a2))
+
 ## [1.0.0-alpha.4](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.3...1.0.0-alpha.4) (2022-04-28)
 
 
