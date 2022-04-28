@@ -187,5 +187,5 @@ export function createPersistentWritable<T>(
   /** if true, the store is promptly set to persisted value */
   autorestore?: boolean
 ) {
-  return persistentWritable(storage, writable(value), autorestore);
+  return persistentWritable<T>(storage, writable(value), autorestore);
 }
