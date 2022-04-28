@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.4](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.3...1.0.0-alpha.4) (2022-04-28)
+
+
+### Features
+
+* change parameter order to infer type ([beae353](https://github.com/syfrtech/svelte-storestore/commit/beae3537673a33928a1a5272513eb1d954dd04e9))
+
 ## [1.0.0-alpha.3](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.2...1.0.0-alpha.3) (2022-04-28)
 
 
