@@ -128,8 +128,8 @@ export interface PersistentReadable<T> extends Readable<T> {
 
 /**  Changes to the Svelte store are persisted to storage. */
 export function persistentReadable<T>(
-  storage: StorageInterface<T>,
-  store: Readable<T>
+  store: Readable<T>,
+  storage: StorageInterface<T>
 ): PersistentReadable<T> {
   let stopPersisting: PersistentReadable<T>["stopPersisting"];
 
@@ -159,12 +159,12 @@ export interface PersistentWritable<T>
 
 /** Changes to the Svelte store are persisted to storage. */
 export function persistentWritable<T>(
-  storage: StorageInterface<T>,
   store: Writable<T>,
+  storage: StorageInterface<T>,
   /** if true, the store is promptly set to persisted value */
   autorestore: boolean = true
 ): PersistentWritable<T> {
-  let result = persistentReadable(storage, store);
+  let result = persistentReadable(store, storage);
   let _restore = async () => {
     try {
       let value = await restore<T>(storage);
@@ -181,11 +181,11 @@ export function persistentWritable<T>(
 
 /** Creates a Svelte store and changes are persisted to storage. */
 export function createPersistentWritable<T>(
-  storage: StorageInterface<T>,
   /** initial store value (awaiting restore or if not restored) */
   value: T,
+  storage: StorageInterface<T>,
   /** if true, the store is promptly set to persisted value */
   autorestore?: boolean
 ) {
-  return persistentWritable<T>(storage, writable(value), autorestore);
+  return persistentWritable<T>(writable(value), storage, autorestore);
 }
