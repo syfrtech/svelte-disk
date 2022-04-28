@@ -38,16 +38,26 @@ export interface StorageInterface<T> {
   del(): Promise<void>;
 }
 
-/** Persistable value and expiration instructions */
-export interface StorageContainerOptions<T> {
-  value: T;
+/** Instructions on how to store a persistable value */
+export interface StorageOptions<T> {
+  /** the interface to the persistent store */
+  storage: StorageInterface<T>;
+
+  /** the number of milliseconds for the value to survive */
   cacheTime?: number;
 }
 
-/** Instructions on how to store a persistable value */
-export interface StorageOptions<T> extends StorageContainerOptions<T> {
-  storage: StorageInterface<T>;
-}
+/** Persistable value and expiration instructions */
+export type StorageInstructions<T> = StorageOptions<T> & {
+  /** the store value to be persisted */
+  value: T;
+};
+
+/** Persistable value and expiration instructions */
+export type StorageContainerInstructions<T> = Omit<
+  StorageInstructions<T>,
+  "storage"
+>;
 
 /**
  * Creates a container from value and container options
@@ -56,7 +66,7 @@ export interface StorageOptions<T> extends StorageContainerOptions<T> {
 function pack<T>({
   value,
   cacheTime = 7776000000,
-}: StorageContainerOptions<T>) {
+}: StorageContainerInstructions<T>) {
   return {
     timestamp: new Date(),
     cacheTime,
@@ -77,7 +87,7 @@ function unpack<T>({ value, timestamp, cacheTime }: StorageContainer<T>) {
 }
 
 /** Saves the information to the storage */
-async function persist<T>({ storage, ...options }: StorageOptions<T>) {
+async function persist<T>({ storage, ...options }: StorageInstructions<T>) {
   storage.set(pack(options));
 }
 
@@ -133,24 +143,24 @@ export interface PersistentStore<T> extends Readable<T> {
 /**  Changes to the Svelte store are persisted to storage. */
 export function persistentReadable<T>(
   store: Readable<T>,
-  storage: StorageInterface<T>
+  options: StorageOptions<T>
 ): PersistentStore<T> {
   let stopPersisting: PersistentStore<T>["stopPersisting"];
 
   let startPersisting: PersistentStore<T>["startPersisting"] = () => {
     !!stopPersisting && stopPersisting(); // avoid duplicate subscriptions
     stopPersisting = store.subscribe((value) => {
-      persist({ storage, value });
+      persist({ value, ...options });
     });
   };
   startPersisting();
 
   let gostore = () => {
-    persist({ storage, value: get(store) });
+    persist({ value: get(store), ...options });
   };
   return {
     ...store,
-    destore: storage.del,
+    destore: options.storage.del,
     gostore,
     startPersisting,
     stopPersisting,
@@ -173,14 +183,14 @@ export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
 /** Changes to the Svelte store are persisted to storage. */
 export function persistentWritable<T>(
   store: Writable<T>,
-  storage: StorageInterface<T>,
+  options: StorageOptions<T>,
   /** if true, the store is promptly set to persisted value */
   autorestore: boolean = true
 ): PersistentWritable<T> {
-  let result = persistentReadable(store, storage);
+  let result = persistentReadable(store, options);
   let _restore = async () => {
     try {
-      let value = await restore<T>(storage);
+      let value = await restore<T>(options.storage);
       store.set(value);
     } catch (e) {
       // no value; no action
@@ -196,9 +206,9 @@ export function persistentWritable<T>(
 export function createPersistentWritable<T>(
   /** initial store value (awaiting restore or if not restored) */
   value: T,
-  storage: StorageInterface<T>,
+  options: StorageOptions<T>,
   /** if true, the store is promptly set to persisted value */
   autorestore?: boolean
 ) {
-  return persistentWritable<T>(writable(value), storage, autorestore);
+  return persistentWritable<T>(writable(value), options, autorestore);
 }
