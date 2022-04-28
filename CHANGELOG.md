@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.3](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.2...1.0.0-alpha.3) (2022-04-28)
+
+
+### Fixes
+
+* correct typing for createPersistentWritable ([6c43bba](https://github.com/syfrtech/svelte-storestore/commit/6c43bba3fb2ecd3f980da0381e4f4c3a72eebed1))
+
 ## [1.0.0-alpha.2](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.1...1.0.0-alpha.2) (2022-04-28)
 
 
