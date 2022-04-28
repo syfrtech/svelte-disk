@@ -2,7 +2,7 @@
   "name": "svelte-storestore",
   "version": "1.0.0-alpha.1",
   "description": "Persist svelte stores to disk",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "install": "rm -rf ./lib; npx tsc",
     "release": "release-it --ci"
