@@ -11,7 +11,7 @@ import {
  */
 export function createIDBPersister<T>(idbValidKey: IDBValidKey) {
   if (!window) {
-    return noopStorage;
+    return noopStorage<T>();
   }
   return {
     get: async () => {
