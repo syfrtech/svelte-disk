@@ -87,7 +87,7 @@ async function persist<T>({ storage, ...options }: StorageInstructions<T>) {
 }
 
 /** Recovers the information from the storage */
-async function restore<T>(storage: StorageInterface<T>) {
+async function read<T>(storage: StorageInterface<T>) {
   try {
     let container = await storage.get(); //throws if nonexistent
     let value = unpack(container); // throws if expired
@@ -95,6 +95,19 @@ async function restore<T>(storage: StorageInterface<T>) {
   } catch (e) {
     storage.del();
     throw e;
+  }
+}
+
+/** Sets the Svelte store to the value read from persisted storage */
+async function readThenSet<T>(
+  storage: StorageInterface<T>,
+  store: Writable<T>
+) {
+  try {
+    let value = await read<T>(storage);
+    store.set(value);
+  } catch (e) {
+    // no value; no action
   }
 }
 
@@ -159,16 +172,8 @@ export function persistentWritable<T>(
   options: StorageOptions<T>
 ): PersistentWritable<T> {
   let result = persistentReadable(store, options);
-  let _restore = async () => {
-    try {
-      let value = await restore<T>(options.storage);
-      store.set(value);
-    } catch (e) {
-      // no value; no action
-    }
-  };
-
-  return { ...result, ...store, restore: _restore };
+  let restore = async () => readThenSet(options.storage, store);
+  return { ...result, ...store, restore };
 }
 
 /** Creates a Svelte store and changes are persisted to storage. */
