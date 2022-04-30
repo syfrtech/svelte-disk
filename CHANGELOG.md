@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.6](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.5...1.0.0-alpha.6) (2022-04-30)
+
+
+### Features
+
+* add noopstorage for build environment ([c9a3fd9](https://github.com/syfrtech/svelte-storestore/commit/c9a3fd9145f04265933d199d4af97340e309f823))
+
 ## [1.0.0-alpha.5](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.4...1.0.0-alpha.5) (2022-04-28)
 
 
