@@ -183,9 +183,7 @@ export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
 /** Changes to the Svelte store are persisted to storage. */
 export function persistentWritable<T>(
   store: Writable<T>,
-  options: StorageOptions<T>,
-  /** if true, the store is promptly set to persisted value */
-  autorestore: boolean = true
+  options: StorageOptions<T>
 ): PersistentWritable<T> {
   let result = persistentReadable(store, options);
   let _restore = async () => {
@@ -197,8 +195,6 @@ export function persistentWritable<T>(
     }
   };
 
-  autorestore && _restore();
-
   return { ...result, ...store, restore: _restore };
 }
 
@@ -206,11 +202,9 @@ export function persistentWritable<T>(
 export function createPersistentWritable<T>(
   /** initial store value (awaiting restore or if not restored) */
   value: T,
-  options: StorageOptions<T>,
-  /** if true, the store is promptly set to persisted value */
-  autorestore?: boolean
+  options: StorageOptions<T>
 ) {
-  return persistentWritable<T>(writable(value), options, autorestore);
+  return persistentWritable<T>(writable(value), options);
 }
 
 /**
