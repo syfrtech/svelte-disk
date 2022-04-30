@@ -177,7 +177,7 @@ export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
    * If persisted data is expired or non-existent, the store will not be set
    * and existing/initial store value remains.
    */
-  restore: () => void;
+  restore: () => Promise<void>;
 }
 
 /** Changes to the Svelte store are persisted to storage. */
