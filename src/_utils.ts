@@ -137,7 +137,7 @@ export interface PersistentStore<T> extends Readable<T> {
   stopPersisting: Unsubscriber;
 
   /** save the current Svelte store value to storage (once) */
-  gostore: () => void;
+  gostore: () => Promise<void>;
 }
 
 /**  Changes to the Svelte store are persisted to storage. */
@@ -155,7 +155,7 @@ export function persistentReadable<T>(
   };
   startPersisting();
 
-  let gostore = () => {
+  let gostore = async () => {
     persist({ value: get(store), ...options });
   };
   return {
