@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.7](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.6...1.0.0-alpha.7) (2022-04-30)
+
+
+### Fixes
+
+* correct noopStorage type ([b0fb733](https://github.com/syfrtech/svelte-storestore/commit/b0fb733eae7d815396a02c8b0d2754135c0aa496))
+
 ## [1.0.0-alpha.6](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.5...1.0.0-alpha.6) (2022-04-30)
 
 
