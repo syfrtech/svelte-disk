@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.8](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.7...1.0.0-alpha.8) (2022-04-30)
+
+
+### Fixes
+
+* promisify goStore ([1e4632b](https://github.com/syfrtech/svelte-storestore/commit/1e4632b2936300c114678efbacff86188175a1d0))
+
 ## [1.0.0-alpha.7](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.6...1.0.0-alpha.7) (2022-04-30)
 
 
