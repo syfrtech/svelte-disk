@@ -5,11 +5,6 @@ import {
   writable,
   get,
 } from "svelte/store";
-// import {
-//   observableToNotifier,
-//   StartStopObservable,
-//   type StartStopObserver,
-// } from "./startstop";
 
 /** A persitable value together with expiration labels */
 export interface StorageContainer<T> {
@@ -102,28 +97,6 @@ async function restore<T>(storage: StorageInterface<T>) {
     throw e;
   }
 }
-
-// probably don't do this... we should restore asap and not wait for a subscriber
-// /**
-//  * Retrieves the persisted value when the first subscriber is added
-//  */
-// export function restoreNotifier<T>(storage: StorageInterface<T>) {
-//   let observable = new StartStopObservable<T>();
-
-//   let observer: StartStopObserver<T> = (status, set) => {
-//     if (status === "start")
-//       try {
-//         restore(storage).then((value) => set(value));
-//         observable.unsubscribe(observer);
-//       } catch (e) {
-//         // nothing stored; no action
-//       }
-//   };
-
-//   observable.subscribe(observer);
-
-//   return observableToNotifier(observable);
-// }
 
 /**  A Svelte store which can be persisted to storage. */
 export interface PersistentStore<T> extends Readable<T> {
