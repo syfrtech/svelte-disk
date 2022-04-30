@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.9](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.8...1.0.0-alpha.9) (2022-04-30)
+
+
+### Fixes
+
+* promisify restore ([5193d05](https://github.com/syfrtech/svelte-storestore/commit/5193d05b9dd6d3cc0c46f84b0d910e1b8cf2c1bd))
+
 ## [1.0.0-alpha.8](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.7...1.0.0-alpha.8) (2022-04-30)
 
 
