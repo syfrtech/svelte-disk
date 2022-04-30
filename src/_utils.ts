@@ -212,3 +212,20 @@ export function createPersistentWritable<T>(
 ) {
   return persistentWritable<T>(writable(value), options, autorestore);
 }
+
+/**
+ * Storage implementation that do nothing
+ */
+export function noopStorage<T>(): StorageInterface<T> {
+  return {
+    async get() {
+      return undefined;
+    },
+    async del() {
+      // Do nothing
+    },
+    async set() {
+      // Do nothing
+    },
+  };
+}
