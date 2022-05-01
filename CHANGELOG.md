@@ -1,5 +1,13 @@
 
 
+## [1.0.0-alpha.16](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.15...1.0.0-alpha.16) (2022-05-01)
+
+
+### Features
+
+* drop startstop ([29c2dc1](https://github.com/syfrtech/svelte-disk/commit/29c2dc14fff2f21161d0f97a58cd516f76e60e22))
+* rename idbDisk ([b715213](https://github.com/syfrtech/svelte-disk/commit/b715213539224f40c9ed8d4f575732f12a9393e6))
+
 ## [1.0.0-alpha.15](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.14...1.0.0-alpha.15) (2022-05-01)
 
 
