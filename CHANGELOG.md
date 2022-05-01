@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.21](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.20...1.0.0-alpha.21) (2022-05-01)
+
+
+### Features
+
+* detach disk for revival ([14f7699](https://github.com/syfrtech/svelte-disk/commit/14f76997f49d5a2034b72e7314026933ef8f3cd9))
+
 ## [1.0.0-alpha.20](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.19...1.0.0-alpha.20) (2022-05-01)
 
 
