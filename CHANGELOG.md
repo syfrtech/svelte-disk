@@ -1,5 +1,17 @@
 
 
+## [1.0.0-alpha.18](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.17...1.0.0-alpha.18) (2022-05-01)
+
+
+### Features
+
+* rename to DiskedStore ([47b0603](https://github.com/syfrtech/svelte-disk/commit/47b0603b3c60233cda4704b94627ed68018c3991))
+
+
+### Documentation
+
+* add readme basics ([48f7845](https://github.com/syfrtech/svelte-disk/commit/48f78452e177e6e8363e1e60b011d31380717cc4))
+
 ## [1.0.0-alpha.17](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.16...1.0.0-alpha.17) (2022-05-01)
 
 
