@@ -1,5 +1,5 @@
 {
-  "name": "svelte-storestore",
+  "name": "svelte-disk",
   "version": "1.0.0-alpha.13",
   "description": "Persist svelte stores to disk",
   "main": "lib/index.js",
@@ -9,11 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syfrtech/svelte-storestore.git"
+    "url": "git+https://github.com/syfrtech/svelte-disk.git"
   },
   "author": "",
   "license": "MIT",
-  "homepage": "https://github.com/syfrtech/svelte-storestore",
+  "homepage": "https://github.com/syfrtech/svelte-disk",
   "devDependencies": {
     "@release-it/bumper": "^3.0.1",
     "@release-it/conventional-changelog": "^4.3.0",

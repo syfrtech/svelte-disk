@@ -1,1 +1,1 @@
-# svelte-storestore
+# svelte-disk
