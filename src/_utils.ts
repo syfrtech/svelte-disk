@@ -35,28 +35,30 @@ export interface DiskInterface<T> {
 }
 
 /** Instructions on how to store a persistable value */
-export interface DiskOptions<T> {
+export interface DiskedStoreOptions<T> {
   /** the interface to the web storage disk */
   disk: DiskInterface<T>;
 
-  /** the number of milliseconds for the value to survive */
+  /** the initial store value */
+  value?: T;
+
+  /**
+   * the number of milliseconds for the value to survive.
+   * default is 90 days: `90 * 24 * 60 * 60 * 1000`
+   * @see pack
+   */
   cacheTime?: number;
+
+  /** unless true, auto subscribe the disk to Svelte store changes */
+  noAttach?: boolean;
 }
 
-/** Persistable value and expiration instructions */
-export type DiskInstructions<T> = DiskOptions<T> & {
-  /** the store value to be persisted */
-  value: T;
-};
-
-/** Persistable value and expiration instructions */
-export type DiskPackInstructions<T> = Omit<DiskInstructions<T>, "disk">;
-
-/**
- * Creates a container with meta information to be persisted
- * default cache time is 90 days: 90*24*60*60*1000
- */
-function pack<T>({ value, cacheTime = 7776000000 }: DiskPackInstructions<T>) {
+export interface DiskedWritableStoreOptions<T> extends DiskedStoreOptions<T> {
+  /** unless true, auto set the store to disk value (if available) */
+  noRevive?: boolean;
+}
+/** Creates a container with meta information to be persisted */
+function pack<T>({ value, cacheTime = 7776000000 }: DiskedStoreOptions<T>) {
   let now = new Date();
   return {
     modified: now,
@@ -66,8 +68,7 @@ function pack<T>({ value, cacheTime = 7776000000 }: DiskPackInstructions<T>) {
 }
 
 /**
- * Conditionally returns a value if not expired.
- * Throws if expired
+ * Conditionally returns a value if not expired (otherwise throws)
  * We throw because `undefined` and `false` are valid persisted values
  */
 function unpack<T>({ value, expires }: DiskPack<T>) {
@@ -78,8 +79,8 @@ function unpack<T>({ value, expires }: DiskPack<T>) {
 }
 
 /** Saves the information to disk */
-async function write<T>({ disk, ...options }: DiskInstructions<T>) {
-  return disk.set(pack(options));
+async function write<T>(options: DiskedStoreOptions<T>) {
+  return options.disk.set(pack(options));
 }
 
 /** Recovers the information from the disk */
@@ -94,7 +95,7 @@ async function read<T>(disk: DiskInterface<T>) {
   }
 }
 
-/** Sets the Svelte store to the value read from disk (or no action if none) */
+/** Sets the Svelte store to the disk's value (or no action if none) */
 async function readThenSet<T>(disk: DiskInterface<T>, store: Writable<T>) {
   try {
     let value = await read<T>(disk);
@@ -122,7 +123,7 @@ export interface DiskedStore<T> extends Readable<T> {
 /**  Adds disk tooling and initiates persistence to disk. */
 export function adaptReadable<T>(
   store: Readable<T>,
-  options: DiskOptions<T>
+  options: DiskedStoreOptions<T>
 ): DiskedStore<T> {
   let diskDetach: DiskedStore<T>["diskDetach"];
   let diskAttach: DiskedStore<T>["diskAttach"] = () => {
@@ -134,7 +135,7 @@ export function adaptReadable<T>(
   let diskUpdate = async () => {
     write({ value: get(store), ...options });
   };
-  diskAttach();
+  options.noAttach || diskAttach();
   return {
     ...store,
     diskDelete: options.disk.del,
@@ -145,12 +146,8 @@ export function adaptReadable<T>(
 }
 
 /** Easily create a `DiskedStore` */
-export function buildReadable<T>(
-  /** initial store value */
-  value: T,
-  options: DiskOptions<T>
-) {
-  return adaptReadable<T>(readable(value), options);
+export function buildReadable<T>(options: DiskedStoreOptions<T>) {
+  return adaptReadable<T>(readable(options.value), options);
 }
 
 /** Same as `DiskedStore` with the added ability to `diskRevive` */
@@ -166,26 +163,17 @@ export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
 /**  Adds disk tooling and initiates persistence to disk. */
 export function adaptWritable<T>(
   store: Writable<T>,
-  options: DiskOptions<T>,
-  autoRevive: boolean = true
+  options: DiskedWritableStoreOptions<T>
 ): DiskedWritable<T> {
   let result = adaptReadable(store, options);
   let diskRevive = async () => readThenSet(options.disk, store);
-  autoRevive &&
-    (() => {
-      result.diskDetach();
-      diskRevive().then((_void) => result.diskAttach());
-    })();
+  options.noRevive || diskRevive();
   return { ...result, ...store, diskRevive };
 }
 
 /** Easily create a `DiskedWritable` */
-export function buildWritable<T>(
-  /** initial store value */
-  value: T,
-  options: DiskOptions<T>
-) {
-  return adaptWritable<T>(writable(value), options);
+export function buildWritable<T>(options: DiskedWritableStoreOptions<T>) {
+  return adaptWritable<T>(writable(options.value), options);
 }
 
 /**
