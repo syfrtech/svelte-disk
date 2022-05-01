@@ -1,5 +1,17 @@
 
 
+## [1.0.0-alpha.19](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.18...1.0.0-alpha.19) (2022-05-01)
+
+
+### Features
+
+* add autorevive ([c92f7ea](https://github.com/syfrtech/svelte-disk/commit/c92f7ea25f049749682b4106b650788bd78ba068))
+
+
+### Documentation
+
+* cleanup ([91fd77d](https://github.com/syfrtech/svelte-disk/commit/91fd77dca9c43fcf79f3972c0825e41b07b89729))
+
 ## [1.0.0-alpha.18](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.17...1.0.0-alpha.18) (2022-05-01)
 
 
