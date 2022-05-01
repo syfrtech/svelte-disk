@@ -1,9 +1,5 @@
 import { get, set, del, keys, createStore } from "idb-keyval";
-import {
-  type StorageInterface,
-  type StorageContainer,
-  noopStorage,
-} from "./_utils";
+import { type DiskInterface, type DiskPack, noopDisk } from "./_utils";
 
 /**
  * Creates an Indexed DB persister
@@ -18,20 +14,19 @@ export function createIDBPersister<T>(
   dbName: string = "svelte-storestore"
 ) {
   if (typeof window === "undefined") {
-    return noopStorage<T>();
+    return noopDisk<T>();
   } else {
     let customStore = createStore(dbName, dbName);
     return {
       get: async () => {
-        let result = await get<StorageContainer<T>>(idbValidKey, customStore);
+        let result = await get<DiskPack<T>>(idbValidKey, customStore);
         if (result === undefined) {
           if (!(await keys()).includes(idbValidKey)) throw "nonexistent key";
         }
         return result;
       },
-      set: async (packed: StorageContainer<T>) =>
-        set(idbValidKey, packed, customStore),
+      set: async (packed: DiskPack<T>) => set(idbValidKey, packed, customStore),
       del: async () => del(idbValidKey, customStore),
-    } as StorageInterface<T>;
+    } as DiskInterface<T>;
   }
 }

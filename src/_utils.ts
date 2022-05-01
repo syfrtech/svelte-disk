@@ -7,7 +7,7 @@ import {
 } from "svelte/store";
 
 /** A persitable value together with expiration labels */
-export interface StorageContainer<T> {
+export interface DiskPack<T> {
   /** when the container was last modified  */
   timestamp: Date;
 
@@ -22,51 +22,45 @@ export interface StorageContainer<T> {
  * Creates persistence/offline storage of Svelte stores
  * (such as through Indexed DB)
  */
-export interface StorageInterface<T> {
+export interface DiskInterface<T> {
   /** Retrieves the container from storage(throws if nonexistent) */
-  get(): Promise<StorageContainer<T> | undefined>;
+  get(): Promise<DiskPack<T> | undefined>;
 
   /** Persists the container to storage for later use */
-  set(value: StorageContainer<T>): Promise<void>;
+  set(value: DiskPack<T>): Promise<void>;
 
   /** Destroy the container from storage */
   del(): Promise<void>;
 }
 
 /** Instructions on how to store a persistable value */
-export interface StorageOptions<T> {
+export interface DiskOptions<T> {
   /** the interface to the persistent store */
-  storage: StorageInterface<T>;
+  storage: DiskInterface<T>;
 
   /** the number of milliseconds for the value to survive */
   cacheTime?: number;
 }
 
 /** Persistable value and expiration instructions */
-export type StorageInstructions<T> = StorageOptions<T> & {
+export type DiskInstructions<T> = DiskOptions<T> & {
   /** the store value to be persisted */
   value: T;
 };
 
 /** Persistable value and expiration instructions */
-export type StorageContainerInstructions<T> = Omit<
-  StorageInstructions<T>,
-  "storage"
->;
+export type DiskPackInstructions<T> = Omit<DiskInstructions<T>, "storage">;
 
 /**
  * Creates a container from value and container options
  * default cache time is 90 days: 90*24*60*60*1000
  */
-function pack<T>({
-  value,
-  cacheTime = 7776000000,
-}: StorageContainerInstructions<T>) {
+function pack<T>({ value, cacheTime = 7776000000 }: DiskPackInstructions<T>) {
   return {
     timestamp: new Date(),
     cacheTime,
     value,
-  } as StorageContainer<T>;
+  } as DiskPack<T>;
 }
 
 /**
@@ -74,7 +68,7 @@ function pack<T>({
  * Throws if the value
  * We throw because `undefined` and `false` are valid persisted values
  */
-function unpack<T>({ value, timestamp, cacheTime }: StorageContainer<T>) {
+function unpack<T>({ value, timestamp, cacheTime }: DiskPack<T>) {
   if (timestamp.valueOf() + cacheTime < new Date().valueOf()) {
     throw "expired cacheTime";
   }
@@ -82,12 +76,12 @@ function unpack<T>({ value, timestamp, cacheTime }: StorageContainer<T>) {
 }
 
 /** Saves the information to the storage */
-async function persist<T>({ storage, ...options }: StorageInstructions<T>) {
+async function write<T>({ storage, ...options }: DiskInstructions<T>) {
   storage.set(pack(options));
 }
 
 /** Recovers the information from the storage */
-async function read<T>(storage: StorageInterface<T>) {
+async function read<T>(storage: DiskInterface<T>) {
   try {
     let container = await storage.get(); //throws if nonexistent
     let value = unpack(container); // throws if expired
@@ -99,10 +93,7 @@ async function read<T>(storage: StorageInterface<T>) {
 }
 
 /** Sets the Svelte store to the value read from persisted storage */
-async function readThenSet<T>(
-  storage: StorageInterface<T>,
-  store: Writable<T>
-) {
+async function readThenSet<T>(storage: DiskInterface<T>, store: Writable<T>) {
   try {
     let value = await read<T>(storage);
     store.set(value);
@@ -114,48 +105,48 @@ async function readThenSet<T>(
 /**  A Svelte store which can be persisted to storage. */
 export interface PersistentStore<T> extends Readable<T> {
   /** destroys the persisted value */
-  destore: StorageInterface<T>["del"];
+  diskDelete: DiskInterface<T>["del"];
 
   /** future changes to the Svelte store are persisted to storage */
-  startPersisting: () => void;
+  diskAttach: () => void;
 
   /** discontinues persisting changes */
-  stopPersisting: Unsubscriber;
+  diskDetach: Unsubscriber;
 
   /** save the current Svelte store value to storage (once) */
-  gostore: () => Promise<void>;
+  diskUpdate: () => Promise<void>;
 }
 
 /**  Changes to the Svelte store are persisted to storage. */
 export function persistentReadable<T>(
   store: Readable<T>,
-  options: StorageOptions<T>
+  options: DiskOptions<T>
 ): PersistentStore<T> {
-  let stopPersisting: PersistentStore<T>["stopPersisting"];
+  let diskDetach: PersistentStore<T>["diskDetach"];
 
-  let startPersisting: PersistentStore<T>["startPersisting"] = () => {
-    !!stopPersisting && stopPersisting(); // avoid duplicate subscriptions
-    stopPersisting = store.subscribe((value) => {
-      persist({ value, ...options });
+  let diskAttach: PersistentStore<T>["diskAttach"] = () => {
+    !!diskDetach && diskDetach(); // avoid duplicate subscriptions
+    diskDetach = store.subscribe((value) => {
+      write({ value, ...options });
     });
   };
-  startPersisting();
+  diskAttach();
 
-  let gostore = async () => {
-    persist({ value: get(store), ...options });
+  let diskUpdate = async () => {
+    write({ value: get(store), ...options });
   };
   return {
     ...store,
-    destore: options.storage.del,
-    gostore,
-    startPersisting,
-    stopPersisting,
+    diskDelete: options.storage.del,
+    diskUpdate,
+    diskAttach,
+    diskDetach,
   };
 }
 
 /**
  * Same as `PersistentStore`, but with the added option to
- * restore the persisted value.
+ * diskRevive the persisted value.
  */
 export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
   /**
@@ -163,32 +154,32 @@ export interface PersistentWritable<T> extends PersistentStore<T>, Writable<T> {
    * If persisted data is expired or non-existent, the store will not be set
    * and existing/initial store value remains.
    */
-  restore: () => Promise<void>;
+  diskRevive: () => Promise<void>;
 }
 
 /** Changes to the Svelte store are persisted to storage. */
 export function persistentWritable<T>(
   store: Writable<T>,
-  options: StorageOptions<T>
+  options: DiskOptions<T>
 ): PersistentWritable<T> {
   let result = persistentReadable(store, options);
-  let restore = async () => readThenSet(options.storage, store);
-  return { ...result, ...store, restore };
+  let diskRevive = async () => readThenSet(options.storage, store);
+  return { ...result, ...store, diskRevive };
 }
 
 /** Creates a Svelte store and changes are persisted to storage. */
 export function createPersistentWritable<T>(
-  /** initial store value (awaiting restore or if not restored) */
+  /** initial store value (awaiting diskRevive or if not diskRevived) */
   value: T,
-  options: StorageOptions<T>
+  options: DiskOptions<T>
 ) {
   return persistentWritable<T>(writable(value), options);
 }
 
 /**
- * Storage implementation that do nothing
+ * Disk implementation that do nothing
  */
-export function noopStorage<T>(): StorageInterface<T> {
+export function noopDisk<T>(): DiskInterface<T> {
   return {
     async get() {
       return undefined;
