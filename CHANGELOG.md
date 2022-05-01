@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.22](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.21...1.0.0-alpha.22) (2022-05-01)
+
+
+### Features
+
+* try a different revival approach ([d96c6bc](https://github.com/syfrtech/svelte-disk/commit/d96c6bcbb3da5ead916e345aba040311245070ff))
+
 ## [1.0.0-alpha.21](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.20...1.0.0-alpha.21) (2022-05-01)
 
 
