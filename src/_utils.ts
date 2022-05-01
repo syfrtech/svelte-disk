@@ -166,10 +166,12 @@ export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
 /**  Adds disk tooling and initiates persistence to disk. */
 export function adaptWritable<T>(
   store: Writable<T>,
-  options: DiskOptions<T>
+  options: DiskOptions<T>,
+  autoRevive: boolean = true
 ): DiskedWritable<T> {
   let result = adaptReadable(store, options);
   let diskRevive = async () => readThenSet(options.disk, store);
+  autoRevive && diskRevive();
   return { ...result, ...store, diskRevive };
 }
 
