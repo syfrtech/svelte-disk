@@ -24,13 +24,13 @@ export interface DiskPack<T> {
  * (such as through Indexed DB)
  */
 export interface DiskInterface<T> {
-  /** Retrieves the container from disk(throws if nonexistent) */
+  /** Retrieves the value from disk(throws if nonexistent) */
   get(): Promise<DiskPack<T> | undefined>;
 
-  /** Persists the container to disk for later use */
+  /** Persists the value to disk for later use */
   set(value: DiskPack<T>): Promise<void>;
 
-  /** Destroy the container from disk */
+  /** Destroy the value from disk */
   del(): Promise<void>;
 }
 
@@ -89,7 +89,7 @@ async function read<T>(disk: DiskInterface<T>) {
     let value = unpack(container); // throws if expired
     return value;
   } catch (e) {
-    disk.del();
+    disk.del(); // remove expired / nonexistent data
     throw e;
   }
 }
@@ -125,18 +125,16 @@ export function adaptReadable<T>(
   options: DiskOptions<T>
 ): DiskedStore<T> {
   let diskDetach: DiskedStore<T>["diskDetach"];
-
   let diskAttach: DiskedStore<T>["diskAttach"] = () => {
     !!diskDetach && diskDetach(); // avoid duplicate subscriptions
     diskDetach = store.subscribe((value) => {
       write({ value, ...options });
     });
   };
-  diskAttach();
-
   let diskUpdate = async () => {
     write({ value: get(store), ...options });
   };
+  diskAttach();
   return {
     ...store,
     diskDelete: options.disk.del,
