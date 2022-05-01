@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.11](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.10...1.0.0-alpha.11) (2022-05-01)
+
+
+### Fixes
+
+* attempt browser check fix ([dce859e](https://github.com/syfrtech/svelte-storestore/commit/dce859efa626e9ee8ddbf2b65e73189c0c629d40))
+
 ## [1.0.0-alpha.10](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.9...1.0.0-alpha.10) (2022-04-30)
 
 ## [1.0.0-alpha.9](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.8...1.0.0-alpha.9) (2022-04-30)
