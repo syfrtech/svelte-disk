@@ -105,7 +105,7 @@ async function readThenSet<T>(disk: DiskInterface<T>, store: Writable<T>) {
 }
 
 /**  A Svelte store which can be persisted to disk. */
-export interface DiskableStore<T> extends Readable<T> {
+export interface DiskedStore<T> extends Readable<T> {
   /** destroys the persisted value on disk */
   diskDelete: DiskInterface<T>["del"];
 
@@ -123,10 +123,10 @@ export interface DiskableStore<T> extends Readable<T> {
 export function adaptReadable<T>(
   store: Readable<T>,
   options: DiskOptions<T>
-): DiskableStore<T> {
-  let diskDetach: DiskableStore<T>["diskDetach"];
+): DiskedStore<T> {
+  let diskDetach: DiskedStore<T>["diskDetach"];
 
-  let diskAttach: DiskableStore<T>["diskAttach"] = () => {
+  let diskAttach: DiskedStore<T>["diskAttach"] = () => {
     !!diskDetach && diskDetach(); // avoid duplicate subscriptions
     diskDetach = store.subscribe((value) => {
       write({ value, ...options });
@@ -146,7 +146,7 @@ export function adaptReadable<T>(
   };
 }
 
-/** Easily create a `DiskableStore` */
+/** Easily create a `DiskedStore` */
 export function buildReadable<T>(
   /** initial store value */
   value: T,
@@ -155,8 +155,8 @@ export function buildReadable<T>(
   return adaptReadable<T>(readable(value), options);
 }
 
-/** Same as `DiskableStore` with the added ability to `diskRevive` */
-export interface DiskableWritable<T> extends DiskableStore<T>, Writable<T> {
+/** Same as `DiskedStore` with the added ability to `diskRevive` */
+export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
   /**
    * Sets the store to the persisted value (async).
    * If persisted data is expired or non-existent, the store will not be set
@@ -169,13 +169,13 @@ export interface DiskableWritable<T> extends DiskableStore<T>, Writable<T> {
 export function adaptWritable<T>(
   store: Writable<T>,
   options: DiskOptions<T>
-): DiskableWritable<T> {
+): DiskedWritable<T> {
   let result = adaptReadable(store, options);
   let diskRevive = async () => readThenSet(options.disk, store);
   return { ...result, ...store, diskRevive };
 }
 
-/** Easily create a `DiskableWritable` */
+/** Easily create a `DiskedWritable` */
 export function buildWritable<T>(
   /** initial store value */
   value: T,
