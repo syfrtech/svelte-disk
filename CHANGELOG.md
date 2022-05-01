@@ -1,5 +1,7 @@
 
 
+## [1.0.0-alpha.13](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.12...1.0.0-alpha.13) (2022-05-01)
+
 ## [1.0.0-alpha.12](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.11...1.0.0-alpha.12) (2022-05-01)
 
 
