@@ -9,11 +9,11 @@ import {
 
 /** A persitable value together with expiration labels */
 export interface DiskPack<T> {
-  /** when the container was last modified  */
-  timestamp: Date;
+  /** when the item was last modified  */
+  modified: Date;
 
-  /** number of milliseconds this entry should survive */
-  cacheTime: number;
+  /** when the item expires*/
+  expires: Date;
 
   /** the contents of the entry */
   value: T;
@@ -57,9 +57,10 @@ export type DiskPackInstructions<T> = Omit<DiskInstructions<T>, "disk">;
  * default cache time is 90 days: 90*24*60*60*1000
  */
 function pack<T>({ value, cacheTime = 7776000000 }: DiskPackInstructions<T>) {
+  let now = new Date();
   return {
-    timestamp: new Date(),
-    cacheTime,
+    modified: now,
+    expires: new Date(now.valueOf() + cacheTime),
     value,
   } as DiskPack<T>;
 }
@@ -69,8 +70,8 @@ function pack<T>({ value, cacheTime = 7776000000 }: DiskPackInstructions<T>) {
  * Throws if expired
  * We throw because `undefined` and `false` are valid persisted values
  */
-function unpack<T>({ value, timestamp, cacheTime }: DiskPack<T>) {
-  if (timestamp.valueOf() + cacheTime < new Date().valueOf()) {
+function unpack<T>({ value, expires }: DiskPack<T>) {
+  if (expires < new Date()) {
     throw "expired cacheTime";
   }
   return value;
