@@ -1,2 +1,2 @@
 export * from "./_utils.js";
-export * from "./storage-idb.js";
+export * from "./disk-idb";

@@ -9,9 +9,9 @@ import { type DiskInterface, type DiskPack, noopDisk } from "./_utils";
  * @param {IDBValidKey} idbValidKey a name for the Svelte store
  * @param {string} dbName the of the database
  */
-export function create<T>(
+export function idbDisk<T>(
   idbValidKey: IDBValidKey,
-  dbName: string = "svelte-storestore"
+  dbName: string = "svelte-disk"
 ) {
   if (typeof window === "undefined") {
     return noopDisk<T>();
