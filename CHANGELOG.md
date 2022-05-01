@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.23](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.22...1.0.0-alpha.23) (2022-05-01)
+
+
+### Fixes
+
+* make value required ([741f25b](https://github.com/syfrtech/svelte-disk/commit/741f25bfa1bd7f73ab84ca8dbb8a0f7833fbfab6))
+
 ## [1.0.0-alpha.22](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.21...1.0.0-alpha.22) (2022-05-01)
 
 
