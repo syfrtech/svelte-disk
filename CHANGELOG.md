@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.12](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.11...1.0.0-alpha.12) (2022-05-01)
+
+
+### Features
+
+* enable custom store name ([a0cfb0c](https://github.com/syfrtech/svelte-storestore/commit/a0cfb0cc7392f09a09da59e729412abc12dd744e))
+
 ## [1.0.0-alpha.11](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.10...1.0.0-alpha.11) (2022-05-01)
 
 
