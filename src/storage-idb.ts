@@ -9,7 +9,7 @@ import { type DiskInterface, type DiskPack, noopDisk } from "./_utils";
  * @param {IDBValidKey} idbValidKey a name for the Svelte store
  * @param {string} dbName the of the database
  */
-export function createIDBPersister<T>(
+export function create<T>(
   idbValidKey: IDBValidKey,
   dbName: string = "svelte-storestore"
 ) {
