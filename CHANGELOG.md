@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.17](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.16...1.0.0-alpha.17) (2022-05-01)
+
+
+### Features
+
+* use date for expiration ([73d79ba](https://github.com/syfrtech/svelte-disk/commit/73d79ba74d704bb8e81eb3e75310b6a82d55d3c0))
+
 ## [1.0.0-alpha.16](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.15...1.0.0-alpha.16) (2022-05-01)
 
 
