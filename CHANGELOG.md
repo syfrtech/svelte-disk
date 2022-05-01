@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.20](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.19...1.0.0-alpha.20) (2022-05-01)
+
+
+### Fixes
+
+* set type to module ([1741441](https://github.com/syfrtech/svelte-disk/commit/17414418aa3417be840671cf842bca8192746905))
+
 ## [1.0.0-alpha.19](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.18...1.0.0-alpha.19) (2022-05-01)
 
 
