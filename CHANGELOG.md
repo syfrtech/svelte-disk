@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.14](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.13...1.0.0-alpha.14) (2022-05-01)
+
+
+### Documentation
+
+* rename package ([0d5ac97](https://github.com/syfrtech/svelte-disk/commit/0d5ac97a74d68ef003f4a4d7c3a9306a19092d9b))
+
 ## [1.0.0-alpha.13](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.12...1.0.0-alpha.13) (2022-05-01)
 
 ## [1.0.0-alpha.12](https://github.com/syfrtech/svelte-storestore/compare/1.0.0-alpha.11...1.0.0-alpha.12) (2022-05-01)
