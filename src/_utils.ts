@@ -79,14 +79,14 @@ function unpack<T>({ value, expires }: DiskPack<T>) {
 
 /** Saves the information to disk */
 async function write<T>({ disk, ...options }: DiskInstructions<T>) {
-  disk.set(pack(options));
+  return disk.set(pack(options));
 }
 
 /** Recovers the information from the disk */
 async function read<T>(disk: DiskInterface<T>) {
   try {
-    let container = await disk.get(); //throws if nonexistent
-    let value = unpack(container); // throws if expired
+    let diskPack = await disk.get(); //throws if nonexistent
+    let value = unpack(diskPack); // throws if expired
     return value;
   } catch (e) {
     disk.del(); // remove expired / nonexistent data
