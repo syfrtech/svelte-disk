@@ -171,7 +171,11 @@ export function adaptWritable<T>(
 ): DiskedWritable<T> {
   let result = adaptReadable(store, options);
   let diskRevive = async () => readThenSet(options.disk, store);
-  autoRevive && diskRevive();
+  autoRevive &&
+    (() => {
+      result.diskDetach();
+      diskRevive().then((_void) => result.diskAttach());
+    })();
   return { ...result, ...store, diskRevive };
 }
 
