@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.15](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.14...1.0.0-alpha.15) (2022-05-01)
+
+
+### Documentation
+
+* rename disk things ([2535b11](https://github.com/syfrtech/svelte-disk/commit/2535b117a1e96aa3ab25eed5dd2703843d8fb2f4))
+
 ## [1.0.0-alpha.14](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.13...1.0.0-alpha.14) (2022-05-01)
 
 
