@@ -3,7 +3,6 @@
   "version": "1.0.0-alpha.24",
   "description": "Persist svelte stores to disk",
   "main": "lib/index.js",
-  "type": "module",
   "scripts": {
     "install": "rm -rf ./lib; npx tsc",
     "release": "release-it --ci"
