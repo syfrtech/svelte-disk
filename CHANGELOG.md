@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.24](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.23...1.0.0-alpha.24) (2022-05-02)
+
+
+### Fixes
+
+* correct path ([37d0a1f](https://github.com/syfrtech/svelte-disk/commit/37d0a1fe54d66e0642a7103022f187ad0d8495df))
+
 ## [1.0.0-alpha.23](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.22...1.0.0-alpha.23) (2022-05-01)
 
 
