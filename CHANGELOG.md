@@ -1,5 +1,12 @@
 
 
+## [1.0.0-alpha.25](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.24...1.0.0-alpha.25) (2022-05-02)
+
+
+### Fixes
+
+* change to commonjs ([aa5a4c9](https://github.com/syfrtech/svelte-disk/commit/aa5a4c90f2894ac27cba848b66d56e36fde79fdb))
+
 ## [1.0.0-alpha.24](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.23...1.0.0-alpha.24) (2022-05-02)
 
 
