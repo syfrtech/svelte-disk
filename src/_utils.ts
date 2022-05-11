@@ -171,17 +171,19 @@ export function adaptWritable<T>(
  * Easily create a `DiskedStore`
  * Be sure to declare the type, ex:`buildReadable<MyExample>(...)`
  */
-export function buildReadable<T>(options: DiskedStoreOptions<T>) {
+function buildReadable<T>(options: DiskedStoreOptions<T>) {
   return adaptReadable<T>(readable(options.value), options);
 }
+export { buildReadable as readable };
 
 /**
  * Easily create a `DiskedWritable`.
  * Be sure to declare the type, ex:`buildWritable<MyExample>(...)`
  * */
-export function buildWritable<T>(options: DiskedWritableStoreOptions<T>) {
+function buildWritable<T>(options: DiskedWritableStoreOptions<T>) {
   return adaptWritable<T>(writable(options.value), options);
 }
+export { buildWritable as writable };
 
 /**
  * Disk implementation that do nothing
