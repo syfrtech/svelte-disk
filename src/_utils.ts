@@ -37,7 +37,7 @@ export interface DiskInterface<T> {
 /** Instructions on how to store a persistable value */
 export interface DiskedStoreOptions<T> {
   /** the initial store value */
-  value: T;
+  value?: T;
 
   /** the interface to the web storage disk */
   disk: DiskInterface<T>;
