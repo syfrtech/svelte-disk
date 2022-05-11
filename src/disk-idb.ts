@@ -1,5 +1,5 @@
 import { get, set, del, keys, createStore } from "idb-keyval";
-import { type DiskInterface, type DiskPack, noopDisk } from "./_utils";
+import { type DiskInterface, type DiskPack, noopDisk } from "./_utils.js";
 
 /**
  * Creates an Indexed Database disk interface
