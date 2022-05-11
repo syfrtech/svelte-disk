@@ -140,11 +140,11 @@ export function adaptReadable<T>(
   let diskAttach: DiskedStore<T>["diskAttach"] = () => {
     if (!!diskDetach) return; // don't subscribe if already subscribed
     diskDetach = store.subscribe((value) => {
-      write({ value, ...options });
+      write({ ...options, value });
     });
   };
   let diskUpdate = async () => {
-    write({ value: get(store), ...options });
+    write({ ...options, value: get(store) });
   };
   options.noAttach || diskAttach();
   return {
