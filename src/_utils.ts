@@ -121,6 +121,16 @@ export interface DiskedStore<T> extends Readable<T> {
   diskUpdate: () => Promise<void>;
 }
 
+/** Same as `DiskedStore` with the added ability to `diskRevive` */
+export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
+  /**
+   * Sets the store to the persisted value (async).
+   * If persisted data is expired or non-existent, the store will not be set
+   * and existing/initial store value remains.
+   */
+  diskRevive: () => Promise<void>;
+}
+
 /**  Adds disk tooling and initiates persistence to disk. */
 export function adaptReadable<T>(
   store: Readable<T>,
@@ -146,24 +156,6 @@ export function adaptReadable<T>(
   };
 }
 
-/**
- * Easily create a `DiskedStore`
- * Be sure to declare the type, ex:`buildReadable<MyExample>(...)`
- */
-export function buildReadable<T>(options: DiskedStoreOptions<T>) {
-  return adaptReadable<T>(readable(options.value), options);
-}
-
-/** Same as `DiskedStore` with the added ability to `diskRevive` */
-export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
-  /**
-   * Sets the store to the persisted value (async).
-   * If persisted data is expired or non-existent, the store will not be set
-   * and existing/initial store value remains.
-   */
-  diskRevive: () => Promise<void>;
-}
-
 /**  Adds disk tooling and initiates persistence to disk. */
 export function adaptWritable<T>(
   store: Writable<T>,
@@ -173,6 +165,14 @@ export function adaptWritable<T>(
   let diskRevive = async () => readThenSet(options.disk, store);
   options.noRevive || diskRevive();
   return { ...result, ...store, diskRevive };
+}
+
+/**
+ * Easily create a `DiskedStore`
+ * Be sure to declare the type, ex:`buildReadable<MyExample>(...)`
+ */
+export function buildReadable<T>(options: DiskedStoreOptions<T>) {
+  return adaptReadable<T>(readable(options.value), options);
 }
 
 /**
