@@ -57,6 +57,7 @@ export interface DiskedWritableStoreOptions<T> extends DiskedStoreOptions<T> {
   /** unless true, auto set the store to disk value (if available) */
   noRevive?: boolean;
 }
+
 /** Creates a container with meta information to be persisted */
 function pack<T>({ value, cacheTime = 7776000000 }: DiskedStoreOptions<T>) {
   let now = new Date();
@@ -127,7 +128,7 @@ export function adaptReadable<T>(
 ): DiskedStore<T> {
   let diskDetach: DiskedStore<T>["diskDetach"];
   let diskAttach: DiskedStore<T>["diskAttach"] = () => {
-    !!diskDetach && diskDetach(); // avoid duplicate subscriptions
+    if (!!diskDetach) return; // don't subscribe if already subscribed
     diskDetach = store.subscribe((value) => {
       write({ value, ...options });
     });
@@ -145,7 +146,10 @@ export function adaptReadable<T>(
   };
 }
 
-/** Easily create a `DiskedStore` */
+/**
+ * Easily create a `DiskedStore`
+ * Be sure to declare the type, ex:`buildReadable<MyExample>(...)`
+ */
 export function buildReadable<T>(options: DiskedStoreOptions<T>) {
   return adaptReadable<T>(readable(options.value), options);
 }
@@ -171,7 +175,10 @@ export function adaptWritable<T>(
   return { ...result, ...store, diskRevive };
 }
 
-/** Easily create a `DiskedWritable` */
+/**
+ * Easily create a `DiskedWritable`.
+ * Be sure to declare the type, ex:`buildWritable<MyExample>(...)`
+ * */
 export function buildWritable<T>(options: DiskedWritableStoreOptions<T>) {
   return adaptWritable<T>(writable(options.value), options);
 }
