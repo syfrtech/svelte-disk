@@ -50,12 +50,12 @@ export interface DiskedStoreOptions<T> {
   cacheTime?: number;
 
   /** unless true, auto subscribe the disk to Svelte store changes */
-  noAttach?: boolean;
+  noAutoAttach?: boolean;
 }
 
 export interface DiskedWritableStoreOptions<T> extends DiskedStoreOptions<T> {
   /** unless true, auto set the store to disk value (if available) */
-  noRevive?: boolean;
+  noAutoRestore?: boolean;
 }
 
 /** Creates a container with meta information to be persisted */
@@ -97,7 +97,7 @@ async function read<T>(disk: DiskInterface<T>) {
 }
 
 /** Sets the Svelte store to the disk's value (or no action if none) */
-async function readThenSet<T>(disk: DiskInterface<T>, store: Writable<T>) {
+async function restore<T>(disk: DiskInterface<T>, store: Writable<T>) {
   try {
     let value = await read<T>(disk);
     store.set(value);
@@ -118,17 +118,17 @@ export interface DiskedStore<T> extends Readable<T> {
   diskDetach: Unsubscriber;
 
   /** save the current Svelte store value to disk (once) */
-  diskUpdate: () => Promise<void>;
+  diskPersist: () => Promise<void>;
 }
 
-/** Same as `DiskedStore` with the added ability to `diskRevive` */
+/** Same as `DiskedStore` with the added ability to `diskRestore` */
 export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
   /**
    * Sets the store to the persisted value (async).
    * If persisted data is expired or non-existent, the store will not be set
    * and existing/initial store value remains.
    */
-  diskRevive: () => Promise<void>;
+  diskRestore: () => Promise<void>;
 }
 
 /**  Adds disk tooling and initiates persistence to disk. */
@@ -143,14 +143,14 @@ export function adaptReadable<T>(
       write({ ...options, value });
     });
   };
-  let diskUpdate = async () => {
+  let diskPersist = async () => {
     write({ ...options, value: get(store) });
   };
-  options.noAttach || diskAttach();
+  options.noAutoAttach || diskAttach();
   return {
     ...store,
     diskDelete: options.disk.del,
-    diskUpdate,
+    diskPersist,
     diskAttach,
     diskDetach,
   };
@@ -162,9 +162,9 @@ export function adaptWritable<T>(
   options: DiskedWritableStoreOptions<T>
 ): DiskedWritable<T> {
   let result = adaptReadable(store, options);
-  let diskRevive = async () => readThenSet(options.disk, store);
-  options.noRevive || diskRevive();
-  return { ...result, ...store, diskRevive };
+  let diskRestore = async () => restore(options.disk, store);
+  options.noAutoRestore || diskRestore();
+  return { ...result, ...store, diskRestore };
 }
 
 /**
