@@ -131,7 +131,7 @@ export interface DiskedWritable<T> extends DiskedStore<T>, Writable<T> {
   diskRestore: () => Promise<void>;
 }
 
-/**  Adds disk tooling and initiates persistence to disk. */
+/**  Adds disk tooling and optionally initiates persistence to disk. */
 export function adaptReadable<T>(
   store: Readable<T>,
   options: DiskedStoreOptions<T>
@@ -156,20 +156,24 @@ export function adaptReadable<T>(
   };
 }
 
-/**  Adds disk tooling and initiates persistence to disk. */
+/**  Same as `adaptReadable` and optionally restores value from disk */
 export function adaptWritable<T>(
   store: Writable<T>,
   options: DiskedWritableStoreOptions<T>
 ): DiskedWritable<T> {
   let result = adaptReadable(store, options);
   let diskRestore = async () => restore(options.disk, store);
-  options.noAutoRestore || diskRestore();
+  if (!options.noAutoRestore) {
+    result.diskDetach();
+    diskRestore();
+    result.diskAttach();
+  }
   return { ...result, ...store, diskRestore };
 }
 
 /**
  * Easily create a `DiskedStore`
- * Be sure to declare the type, ex:`buildReadable<MyExample>(...)`
+ * Be sure to declare the type, ex:`readable<MyExample>(...)`
  */
 function buildReadable<T>(options: DiskedStoreOptions<T>) {
   return adaptReadable<T>(readable(options.value), options);
@@ -178,7 +182,7 @@ export { buildReadable as readable };
 
 /**
  * Easily create a `DiskedWritable`.
- * Be sure to declare the type, ex:`buildWritable<MyExample>(...)`
+ * Be sure to declare the type, ex:`writable<MyExample>(...)`
  * */
 function buildWritable<T>(options: DiskedWritableStoreOptions<T>) {
   return adaptWritable<T>(writable(options.value), options);
