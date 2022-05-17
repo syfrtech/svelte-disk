@@ -1,5 +1,29 @@
 
 
+## [1.0.0-alpha.26](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.25...1.0.0-alpha.26) (2022-05-17)
+
+
+### Features
+
+* allow `saveExistingValue `option ([4ab27b7](https://github.com/syfrtech/svelte-disk/commit/4ab27b78f477806038836298a3eeee9be5bfdb76))
+* rename exports ([1aa2536](https://github.com/syfrtech/svelte-disk/commit/1aa25365dfef7c88dd5e8a06b9fe83b7f0ba4824))
+* set to module ([7f66ede](https://github.com/syfrtech/svelte-disk/commit/7f66ede61cee0641bdb768afbcc0c40804b55aaf))
+
+
+### Documentation
+
+* update build docs ([ec1849a](https://github.com/syfrtech/svelte-disk/commit/ec1849ab1d61d4490830cf6dd2b92c2dd2c952bf))
+* update from renames ([94d4c19](https://github.com/syfrtech/svelte-disk/commit/94d4c192d098fae59e8bc3459bf38e7be3aaaa74))
+
+
+### Fixes
+
+* detach disk before restore ([fe8e3b8](https://github.com/syfrtech/svelte-disk/commit/fe8e3b89e746f4f5ae81a91bbacf632a66a67178))
+* make value optional ([8842491](https://github.com/syfrtech/svelte-disk/commit/88424910dda3c8a84fd049961a197e7560692cfa))
+* swap order so current value wins ([fdc01d1](https://github.com/syfrtech/svelte-disk/commit/fdc01d1ca85161e05299a0a4d12929531000fd66))
+* use customStore for keys also ([56efe8c](https://github.com/syfrtech/svelte-disk/commit/56efe8c7e8f43b16022adae16cfc078e66395144))
+* use file extensions ([b79268a](https://github.com/syfrtech/svelte-disk/commit/b79268a245ebe2f2f8f7f180e6612b08dd4640ca))
+
 ## [1.0.0-alpha.25](https://github.com/syfrtech/svelte-disk/compare/1.0.0-alpha.24...1.0.0-alpha.25) (2022-05-02)
 
 
