@@ -21,7 +21,8 @@ export function idbDisk<T>(
     get: async () => {
       let result = await get<DiskPack<T>>(idbValidKey, customStore);
       if (result === undefined) {
-        if (!(await keys()).includes(idbValidKey)) throw "nonexistent key";
+        if (!(await keys(customStore)).includes(idbValidKey))
+          throw "nonexistent key";
       }
       return result;
     },
