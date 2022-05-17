@@ -111,8 +111,15 @@ export interface DiskedStore<T> extends Readable<T> {
   /** destroys the persisted value on disk */
   diskDelete: DiskInterface<T>["del"];
 
-  /** future changes to the Svelte store are persisted to disk */
-  diskAttach: () => void;
+  /** Future changes to the Svelte store will be persisted to disk **/
+  diskAttach: (options?: {
+    /**
+     * defaults to false.
+     * if true, the stores's value will also be immediately persisted
+     * (in addition to future changes)
+     */
+    saveExistingValue: boolean;
+  }) => void;
 
   /** discontinues persisting changes */
   diskDetach: Unsubscriber;
@@ -136,12 +143,20 @@ export function adaptReadable<T>(
   store: Readable<T>,
   options: DiskedStoreOptions<T>
 ): DiskedStore<T> {
-  let diskDetach: DiskedStore<T>["diskDetach"];
-  let diskAttach: DiskedStore<T>["diskAttach"] = () => {
-    if (!!diskDetach) return; // don't subscribe if already subscribed
-    diskDetach = store.subscribe((value) => {
-      write({ ...options, value });
+  let firstTime = true;
+  let unsubscribe: ReturnType<typeof store.subscribe>;
+  let diskDetach: DiskedStore<T>["diskDetach"] = () => {
+    firstTime = true;
+    unsubscribe();
+  };
+  let diskAttach: DiskedStore<T>["diskAttach"] = ({
+    saveExistingValue = false,
+  }) => {
+    if (!!unsubscribe) return; // don't subscribe if already subscribed
+    unsubscribe = store.subscribe((value) => {
+      if (!firstTime || saveExistingValue) write({ ...options, value });
     });
+    firstTime = false;
   };
   let diskPersist = async () => {
     write({ ...options, value: get(store) });
@@ -161,13 +176,15 @@ export function adaptWritable<T>(
   store: Writable<T>,
   options: DiskedWritableStoreOptions<T>
 ): DiskedWritable<T> {
-  let result = adaptReadable(store, options);
+  let result = adaptReadable(store, { ...options, noAutoAttach: true });
   let diskRestore = async () => restore(options.disk, store);
-  if (!options.noAutoRestore) {
-    result.diskDetach();
-    diskRestore();
-    result.diskAttach();
+
+  /** restore first, then attach */
+  async function initialize() {
+    options.noAutoRestore || (await diskRestore());
+    options.noAutoAttach || result.diskAttach({ saveExistingValue: false });
   }
+  initialize();
   return { ...result, ...store, diskRestore };
 }
 
